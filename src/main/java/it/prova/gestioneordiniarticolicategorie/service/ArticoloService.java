@@ -30,6 +30,8 @@ public interface ArticoloService {
 
 	public Double sommaPrezzoArticoliDiUnDestinatario (String nomeDestinatario) throws Exception;
 
+	public List<Articolo> listaArticoliConErroriInOrdine();
+
 
 	
 

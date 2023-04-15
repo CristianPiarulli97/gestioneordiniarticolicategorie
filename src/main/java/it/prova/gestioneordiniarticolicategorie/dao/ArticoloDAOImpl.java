@@ -97,4 +97,11 @@ public class ArticoloDAOImpl implements ArticoloDAO {
 		return result;
 	}
 
+	@Override
+	public List<Articolo> listaArticoliConErroriInOrdine() {
+		TypedQuery<Articolo> query = entityManager.createQuery("select a from Articolo a join a.ordine o where o.dataSpedizione > o.dataScadenza", Articolo.class);
+		return query.getResultList();
+
+	}
+
 }

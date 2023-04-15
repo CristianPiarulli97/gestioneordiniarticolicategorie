@@ -1,5 +1,7 @@
 package it.prova.gestioneordiniarticolicategorie.dao;
 
+import java.util.List;
+
 import it.prova.gestioneordiniarticolicategorie.model.Articolo;
 
 public interface ArticoloDAO extends IBaseDAO<Articolo>{
@@ -13,4 +15,6 @@ public interface ArticoloDAO extends IBaseDAO<Articolo>{
 	public Double sumPrezzoArticoliDiUnaCategoria(Long idCategoria);
 	
 	public Double sumPrezzoArticoliDiUnDestinatario (String nomeDestinatario) throws Exception;
+
+	public List<Articolo> listaArticoliConErroriInOrdine();
 }

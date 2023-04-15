@@ -222,5 +222,23 @@ public class ArticoloServiceImpl implements ArticoloService{
 			EntityManagerUtil.closeEntityManager(entityManager);
 		}
 	}
+
+	@Override
+	public List<Articolo> listaArticoliConErroriInOrdine() {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			// injection
+			articoloDAO.setEntityManager(entityManager);
+
+			return articoloDAO.listaArticoliConErroriInOrdine();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
 	
 }

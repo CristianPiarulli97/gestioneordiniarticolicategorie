@@ -163,7 +163,7 @@ public class Articolo {
 	public String toString() {
 		return "Articolo [id=" + id + ", descrizione=" + descrizione + ", numeroSeriale=" + numeroSeriale
 				+ ", prezzoSingolo=" + prezzoSingolo + ", dataInserimento=" + dataInserimento + ", createDateTime="
-				+ createDateTime + ", updateDateTime=" + updateDateTime + "]/n";
+				+ createDateTime + ", updateDateTime=" + updateDateTime + "]\n";
 	}
 	
 	

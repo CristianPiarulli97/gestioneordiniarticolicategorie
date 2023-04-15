@@ -3,6 +3,7 @@ package it.prova.gestioneordiniarticolicategorie.dao;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import it.prova.gestioneordiniarticolicategorie.model.Categoria;
 
@@ -53,4 +54,10 @@ public class CategoriaDAOImpl implements CategoriaDAO{
 		
 	}
 
+	public List<String> listCodiciCategoriaDuranteUnMese(int anno, int mese) throws Exception {
+		TypedQuery<String> query = entityManager.createQuery(
+				"select distinct c.codice from Categoria c join c.articoli a join a.ordine o where month(o.dataSpedizione) = :mese and year(o.dataSpedizione) = :anno",
+				String.class).setParameter("mese", mese).setParameter("anno", anno);
+		return query.getResultList();
+	}
 }

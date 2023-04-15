@@ -26,6 +26,8 @@ public interface CategoriaService {
 
 	public void rimozioneCompletaCategoria(Long id);
 
+	public List<String> listaCodiciCategoriaDiUnMese(int annoDaCercare, int meseDaCercare) throws Exception;
+
 	
 
 }
