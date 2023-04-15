@@ -29,7 +29,7 @@ public class TestGestioneordiniarticolicategorie {
 			
 		//	testAggiornamentoOrdineEsistente(ordineServiceInstance);
 			
-			testAggiornamentoArticoloEsistente(articoloServiceInstance);
+		//	testAggiornamentoArticoloEsistente(articoloServiceInstance);
 			
 			
 		} catch (Throwable e) {
