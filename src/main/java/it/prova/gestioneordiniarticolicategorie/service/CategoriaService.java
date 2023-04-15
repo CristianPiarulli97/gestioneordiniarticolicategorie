@@ -22,6 +22,10 @@ public interface CategoriaService {
 
 	public void aggiungiArticolo(Categoria categoriaInstance, Articolo articoloInstance) throws Exception;
 
+	public Categoria caricaCategoriaEager(Long id);
 
+	public void rimozioneCompletaCategoria(Long id);
+
+	
 
 }

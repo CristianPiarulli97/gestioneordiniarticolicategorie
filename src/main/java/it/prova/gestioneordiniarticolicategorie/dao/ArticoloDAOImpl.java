@@ -7,11 +7,10 @@ import javax.persistence.TypedQuery;
 
 import it.prova.gestioneordiniarticolicategorie.model.Articolo;
 
-public class ArticoloDAOImpl implements ArticoloDAO{
+public class ArticoloDAOImpl implements ArticoloDAO {
 
-	
 	private EntityManager entityManager;
-	
+
 	@Override
 	public List<Articolo> list() throws Exception {
 		return entityManager.createQuery("from Articolo", Articolo.class).getResultList();
@@ -27,7 +26,7 @@ public class ArticoloDAOImpl implements ArticoloDAO{
 		if (input == null) {
 			throw new Exception("Problema valore in input");
 		}
-		input = entityManager.merge(input);		
+		input = entityManager.merge(input);
 	}
 
 	@Override
@@ -36,7 +35,7 @@ public class ArticoloDAOImpl implements ArticoloDAO{
 			throw new Exception("Problema valore in input");
 		}
 		entityManager.persist(input);
-		
+
 	}
 
 	@Override
@@ -45,17 +44,33 @@ public class ArticoloDAOImpl implements ArticoloDAO{
 			throw new Exception("Problema valore in input");
 		}
 		entityManager.remove(entityManager.merge(input));
-		
+
 	}
 
 	@Override
 	public void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;		
+		this.entityManager = entityManager;
 	}
 
-	
 	@Override
 	public Articolo caricaArticolo(Long idArticolo) throws Exception {
+		TypedQuery<Articolo> query = entityManager
+				.createQuery("from Articolo a join fetch a.categorie c where a.id = ?1", Articolo.class);
+		query.setParameter(1, idArticolo);
+		return query.getResultStream().findFirst().orElse(null);
+	}
+
+	@Override
+	public void deleteCompletoArticolo(Long idArticolo) {
+		entityManager.createNativeQuery("delete from articolo_categoria a where a.articolo_id = ?1")
+				.setParameter(1, idArticolo).executeUpdate();
+		entityManager.createNativeQuery("delete from articolo a where a.id = ?1").setParameter(1, idArticolo)
+				.executeUpdate();
+
+	}
+
+	@Override
+	public Articolo caricaArticoloEager(Long idArticolo) {
 		TypedQuery<Articolo> query = entityManager
 				.createQuery("from Articolo a join fetch a.categorie c where a.id = ?1", Articolo.class);
 		query.setParameter(1, idArticolo);

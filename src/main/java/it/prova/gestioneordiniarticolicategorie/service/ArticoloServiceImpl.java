@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import it.prova.gestioneordiniarticolicategorie.dao.ArticoloDAO;
 import it.prova.gestioneordiniarticolicategorie.dao.EntityManagerUtil;
 import it.prova.gestioneordiniarticolicategorie.model.Articolo;
+import it.prova.gestioneordiniarticolicategorie.model.Categoria;
 
 public class ArticoloServiceImpl implements ArticoloService{
 
@@ -117,6 +118,72 @@ public class ArticoloServiceImpl implements ArticoloService{
 			entityManager.getTransaction().commit();
 		} catch (Exception e) {
 			entityManager.getTransaction().rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
+
+	@Override
+	public void aggiungiCategoria(Articolo articoloInstance, Categoria categoriaInstance) {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			entityManager.getTransaction().begin();
+			
+			// injection
+			articoloDAO.setEntityManager(entityManager);
+			
+			articoloInstance = entityManager.merge(articoloInstance);
+
+			categoriaInstance = entityManager.merge(categoriaInstance);
+			
+			articoloInstance.addToCategorie(categoriaInstance);
+			
+			entityManager.getTransaction().commit();
+		} catch (Exception e) {
+			entityManager.getTransaction().rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}		
+	}
+	
+	public void rimozioneArticoloCompleta(Long idArticolo) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			entityManager.getTransaction().begin();
+			
+			// injection
+			articoloDAO.setEntityManager(entityManager);
+
+			articoloDAO.deleteCompletoArticolo(idArticolo);
+
+			entityManager.getTransaction().commit();
+		} catch (Exception e) {
+			entityManager.getTransaction().rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+		
+	}
+
+	@Override
+	public Articolo caricaArticoloEager(Long idArticolo) {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			// injection
+			articoloDAO.setEntityManager(entityManager);
+
+			return articoloDAO.caricaArticoloEager(idArticolo);
+
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		} finally {

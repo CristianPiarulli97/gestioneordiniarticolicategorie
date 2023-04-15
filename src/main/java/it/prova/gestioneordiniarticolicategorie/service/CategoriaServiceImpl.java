@@ -3,6 +3,7 @@ package it.prova.gestioneordiniarticolicategorie.service;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import it.prova.gestioneordiniarticolicategorie.dao.CategoriaDAO;
 import it.prova.gestioneordiniarticolicategorie.dao.EntityManagerUtil;
@@ -12,14 +13,13 @@ import it.prova.gestioneordiniarticolicategorie.model.Categoria;
 public class CategoriaServiceImpl implements CategoriaService {
 
 	private CategoriaDAO categoriaDAO;
+	private EntityManager entityManager;
 
-	
 	@Override
 	public void setCategoriaDAO(CategoriaDAO categoriaDAO) {
-		this.categoriaDAO=categoriaDAO;		
+		this.categoriaDAO = categoriaDAO;
 	}
 
-	
 	@Override
 	public List<Categoria> listAll() throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
@@ -56,7 +56,6 @@ public class CategoriaServiceImpl implements CategoriaService {
 		}
 	}
 
-	
 	@Override
 	public void aggiorna(Categoria categoriaInstance) throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
@@ -79,7 +78,6 @@ public class CategoriaServiceImpl implements CategoriaService {
 		}
 	}
 
-	
 	@Override
 	public void inserisciNuovo(Categoria categoriaInstance) throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
@@ -102,7 +100,6 @@ public class CategoriaServiceImpl implements CategoriaService {
 		}
 	}
 
-	
 	@Override
 	public void rimuovi(Long idCategoria) throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
@@ -126,7 +123,6 @@ public class CategoriaServiceImpl implements CategoriaService {
 
 	}
 
-	
 	@Override
 	public void aggiungiArticolo(Categoria categoriaInstance, Articolo articoloInstance) throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
@@ -136,11 +132,11 @@ public class CategoriaServiceImpl implements CategoriaService {
 
 			// injection
 			categoriaDAO.setEntityManager(entityManager);
-			
+
 			categoriaInstance = entityManager.merge(categoriaInstance);
 
 			articoloInstance = entityManager.merge(articoloInstance);
-			
+
 			articoloInstance.addToCategorie(categoriaInstance);
 
 			entityManager.getTransaction().commit();
@@ -152,5 +148,23 @@ public class CategoriaServiceImpl implements CategoriaService {
 			EntityManagerUtil.closeEntityManager(entityManager);
 		}
 	}
-	
+
+	@Override
+	public Categoria caricaCategoriaEager(Long idCategoria) {
+
+		TypedQuery<Categoria> query = entityManager
+				.createQuery("from Categoria c join fetch c.articoli a where c.id = ?1", Categoria.class);
+		query.setParameter(1, idCategoria);
+		return query.getResultStream().findFirst().orElse(null);
+	}
+
+	@Override
+	public void rimozioneCompletaCategoria(Long idCategoria) {
+		entityManager.createNativeQuery("delete from articolo_categoria a where a.categoria_id = ?1")
+				.setParameter(1, idCategoria).executeUpdate();
+		entityManager.createNativeQuery("delete from categoria c where c.id = ?1").setParameter(1, idCategoria)
+				.executeUpdate();
+
+	}
+
 }
