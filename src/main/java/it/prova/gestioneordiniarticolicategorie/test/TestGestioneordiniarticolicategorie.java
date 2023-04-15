@@ -2,6 +2,7 @@ package it.prova.gestioneordiniarticolicategorie.test;
 
 import it.prova.gestioneordiniarticolicategorie.dao.EntityManagerUtil;
 import it.prova.gestioneordiniarticolicategorie.model.Articolo;
+import it.prova.gestioneordiniarticolicategorie.model.Categoria;
 import it.prova.gestioneordiniarticolicategorie.model.Ordine;
 import it.prova.gestioneordiniarticolicategorie.service.ArticoloService;
 import it.prova.gestioneordiniarticolicategorie.service.CategoriaService;
@@ -31,6 +32,7 @@ public class TestGestioneordiniarticolicategorie {
 			
 		//	testAggiornamentoArticoloEsistente(articoloServiceInstance);
 			
+			testInserimentoNuovaCategoria(categoriaServiceInstance);
 			
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -46,11 +48,11 @@ public class TestGestioneordiniarticolicategorie {
 	
 	private static void testInserisciArticolo(ArticoloService articoloServiceInstance,OrdineService ordineServiceInstance) throws Exception {
 	
-		Ordine ordineDaCollegare = new Ordine("Matteo Matano", "Via dei promontori", LocalDate.of(2023, 04, 15),
+		Ordine ordineDaCollegare = new Ordine("Riccardo Binachini", "Via delle baleniere", LocalDate.of(2023, 04, 15),
 				LocalDate.of(2023, 05, 15));
 		ordineServiceInstance.inserisciNuovo(ordineDaCollegare);
 		
-		Articolo articoloDaInserire = new Articolo("Tastiera","XXX543",3.4);
+		Articolo articoloDaInserire = new Articolo("Cavo USB","X00143",3.4);
 		articoloDaInserire.setOrdine(ordineDaCollegare);
 		articoloServiceInstance.inserisciNuovo(articoloDaInserire);
 
@@ -59,7 +61,7 @@ public class TestGestioneordiniarticolicategorie {
 	private static void testInserimentoNuovoOrdine(OrdineService ordineServiceInstance) throws Exception {
 		System.out.println("------------- testInserimentoNuovoOrdine INIZIO -------------");
 
-		Ordine ordineDaInserire = new Ordine("Cristian Piarulli", "Via Antonio antonioli", LocalDate.of(2023, 04, 24),
+		Ordine ordineDaInserire = new Ordine("Manuel Piarulli", "Via Antonio antonioli", LocalDate.of(2023, 04, 24),
 				LocalDate.of(2023, 05, 01));
 		ordineServiceInstance.inserisciNuovo(ordineDaInserire);
 		if (ordineDaInserire.getId() == null) {
@@ -92,7 +94,7 @@ public class TestGestioneordiniarticolicategorie {
 	}
 	
 	private static void testAggiornamentoArticoloEsistente(ArticoloService articoloServiceInstance) throws Exception {
-		System.out.println("------------- testAggiornamentoArticoloEsistente INIZIO -------------");
+		
 
 		List<Articolo> listaArticoliPresenti = articoloServiceInstance.listAll();
 		if (listaArticoliPresenti.size() < 1) {
@@ -112,6 +114,17 @@ public class TestGestioneordiniarticolicategorie {
 		System.out.println("Dopo l'aggiornamento: " + articoloReloaded);
 		System.out.println("------------- testAggiornamentoArticoloEsistente FINE -------------");
 
+	}
+	
+	private static void testInserimentoNuovaCategoria(CategoriaService categoriaServiceInstance) throws Exception {
+		
+
+		Categoria categoriaDaInserire = new Categoria("Giardinaggio", "19");
+		categoriaServiceInstance.inserisciNuovo(categoriaDaInserire);
+		if (categoriaDaInserire.getId() == null) {
+			throw new RuntimeException("testInserimentoNuovaCategoria FALLITO: Ordine non inserito.");
+		}
+		System.out.println("------------- testInserimentoNuovaCategoria FINE -------------");
 	}
 
 	

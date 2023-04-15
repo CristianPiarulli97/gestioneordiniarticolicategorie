@@ -7,17 +7,17 @@ import it.prova.gestioneordiniarticolicategorie.model.Articolo;
 
 public interface ArticoloService {
 
-	void setArticoloDAO(ArticoloDAO articoloDAOInstance);
+	public void setArticoloDAO(ArticoloDAO articoloDAOInstance);
 
-	Articolo caricaSingoloElemento(Long id) throws Exception;
+	public Articolo caricaSingoloElemento(Long id) throws Exception;
 
-	void aggiorna(Articolo articoloInstance) throws Exception;
+	public void aggiorna(Articolo articoloInstance) throws Exception;
 
-	void inserisciNuovo(Articolo articoloInstance) throws Exception;
+	public void inserisciNuovo(Articolo articoloInstance) throws Exception;
 
-	void rimuovi(Long idArticolo) throws Exception;
+	public 	void rimuovi(Long idArticolo) throws Exception;
 
-	List<Articolo> listAll() throws Exception;
+	public	List<Articolo> listAll() throws Exception;	
 
 	
 
