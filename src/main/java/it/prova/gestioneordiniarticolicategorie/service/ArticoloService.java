@@ -26,7 +26,10 @@ public interface ArticoloService {
 
 	public void rimozioneArticoloCompleta(Long id) throws Exception;
 
-	
+	public Double sommaPrezzoArticoliDiUnaCategoria(Long idNuovaCategoria);
+
+	public Double sommaPrezzoArticoliDiUnDestinatario (String nomeDestinatario) throws Exception;
+
 
 	
 

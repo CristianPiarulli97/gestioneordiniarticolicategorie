@@ -3,6 +3,7 @@ package it.prova.gestioneordiniarticolicategorie.dao;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import it.prova.gestioneordiniarticolicategorie.model.Articolo;
@@ -75,6 +76,25 @@ public class ArticoloDAOImpl implements ArticoloDAO {
 				.createQuery("from Articolo a join fetch a.categorie c where a.id = ?1", Articolo.class);
 		query.setParameter(1, idArticolo);
 		return query.getResultStream().findFirst().orElse(null);
+	}
+
+	@Override
+	public Double sumPrezzoArticoliDiUnaCategoria(Long idCategoria) {
+		Double result = null;
+		Query query = entityManager
+				.createQuery("select sum(a.prezzoSingolo) from Articolo a join a.categorie c where c.id = ?1")
+				.setParameter(1, idCategoria);
+		result = (Double) query.getSingleResult();
+		return result;
+	}
+	
+	public Double sumPrezzoArticoliDiUnDestinatario(String nomeDestinatario) throws Exception {
+		Double result = null;
+		Query query = entityManager
+				.createQuery("select sum(a.prezzoSingolo) from Articolo a join a.ordine o where o.nomeDestinatario like ?1")
+				.setParameter(1, nomeDestinatario);
+		result = (Double) query.getSingleResult();
+		return result;
 	}
 
 }

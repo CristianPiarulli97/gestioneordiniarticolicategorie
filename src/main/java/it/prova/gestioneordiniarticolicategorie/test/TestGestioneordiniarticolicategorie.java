@@ -42,7 +42,11 @@ public class TestGestioneordiniarticolicategorie {
 		
 		//	testRimozioneCompletaCategoria(articoloServiceInstance, categoriaServiceInstance, ordineServiceInstance);
 			
+		//	testListaOrdiniPerCategoria(ordineServiceInstance, articoloServiceInstance, categoriaServiceInstance);
 			
+		//	testSommaPrezziArticoliDiUnaCategoria(ordineServiceInstance, articoloServiceInstance, categoriaServiceInstance);
+			
+			testSommaPrezzoArticoliPerUnDestinatario(ordineServiceInstance, articoloServiceInstance, categoriaServiceInstance);
 			
 		
 		} catch (Throwable e) {
@@ -269,6 +273,7 @@ public class TestGestioneordiniarticolicategorie {
 	
 	private static void testRimozioneCompletaCategoria(ArticoloService articoloServiceInstance,
 			CategoriaService categoriaServiceInstance, OrdineService ordineServiceInstance) throws Exception {
+		
 		System.out.println("------------- testRimozioneCompletaCategoria INIZIO -------------");
 		Categoria nuovaCategoria = new Categoria("Cucina", "201");
 		categoriaServiceInstance.inserisciNuovo(nuovaCategoria);
@@ -305,6 +310,139 @@ public class TestGestioneordiniarticolicategorie {
 		categoriaServiceInstance.rimozioneCompletaCategoria(categoriaReloaded.getId());
 
 		System.out.println("------------- testRimozioneCompletaCategoria FINE -------------");
-
 	}
+	
+	private static void testListaOrdiniPerCategoria(OrdineService ordineServiceInstance,
+			ArticoloService articoloServiceInstance, CategoriaService categoriaServiceInstance) throws Exception {
+		System.out.println("------------- testListaOrdiniPerCategoria INIZIO -------------");
+		Categoria nuovaCategoria = new Categoria("Abbigliamento", "201");
+		categoriaServiceInstance.inserisciNuovo(nuovaCategoria);
+		Long idNuovaCategoria = nuovaCategoria.getId();
+		if (idNuovaCategoria == null) {
+			throw new RuntimeException("testListaOrdiniPerCategoria FALLITO: categoria non inserita.");
+		}
+		Ordine nuovoOrdine = new Ordine("Luca De Luca", "Via Casilina 52", LocalDate.of(2023, 5, 31),
+				LocalDate.of(2023, 8, 30));
+		ordineServiceInstance.inserisciNuovo(nuovoOrdine);
+		if (nuovoOrdine.getId() == null) {
+			throw new RuntimeException("testListaOrdiniPerCategoria FALLITO: Ordine non inserito.");
+		}
+		Articolo nuovoArticolo = new Articolo("Scarpe Nike", "0001", 299D, LocalDate.now());
+		nuovoArticolo.setOrdine(nuovoOrdine);
+		articoloServiceInstance.inserisciNuovo(nuovoArticolo);
+		if (nuovoArticolo.getId() == null) {
+			throw new RuntimeException("testListaOrdiniPerCategoria FALLITO: Ordine non inserito.");
+		}
+
+		articoloServiceInstance.aggiungiCategoria(nuovoArticolo, nuovaCategoria);
+		Articolo articoloReloaded = articoloServiceInstance.caricaArticoloEager(nuovoArticolo.getId());
+		if (articoloReloaded.getCategorie().isEmpty()) {
+			throw new RuntimeException("testListaOrdiniPerCategoria FALLITO: articolo non associato a categoria");
+		}
+
+		List<Ordine> listaOrdiniPerCategoria = ordineServiceInstance.listaOrdiniPerCategoria(idNuovaCategoria);
+		if (listaOrdiniPerCategoria.size() < 1) {
+			throw new RuntimeException("testListaOrdiniPerCategoria FALLITO: lista vuota");
+		}
+
+		System.out.println(listaOrdiniPerCategoria);
+		System.out.println("------------- testListaOrdiniPerCategoria FINE -------------");
+	}
+
+
+	private static void testSommaPrezziArticoliDiUnaCategoria(OrdineService ordineServiceInstance,
+			ArticoloService articoloServiceInstance, CategoriaService categoriaServiceInstance) throws Exception {
+		System.out.println("------------- testSommaPrezziArticoliDiUnaCategoria INIZIO -------------");
+
+		Ordine nuovoOrdine = new Ordine("Galileo Galilei", "Via Casilina 52", LocalDate.of(2023, 5, 31),
+				LocalDate.of(2023, 8, 30));
+		ordineServiceInstance.inserisciNuovo(nuovoOrdine);
+		Long idNuovoOrdine = nuovoOrdine.getId();
+		if (idNuovoOrdine == null) {
+			throw new RuntimeException("testSommaPrezziArticoliDiUnaCategoria FALLITO: Ordine non inserito.");
+		}
+
+		Categoria nuovaCategoria = new Categoria("Musica", "202");
+		categoriaServiceInstance.inserisciNuovo(nuovaCategoria);
+		Long idNuovaCategoria = nuovaCategoria.getId();
+		if (idNuovaCategoria == null) {
+			throw new RuntimeException("testSommaPrezziArticoliDiUnaCategoria FALLITO: categoria non inserita.");
+		}
+
+		Articolo nuovoArticolo1 = new Articolo("apple music", "0001", 300D, LocalDate.now());
+		nuovoArticolo1.setOrdine(nuovoOrdine);
+		articoloServiceInstance.inserisciNuovo(nuovoArticolo1);
+		if (nuovoArticolo1.getId() == null) {
+			throw new RuntimeException("testSommaPrezziArticoliDiUnaCategoria FALLITO: Ordine non inserito.");
+		}
+		articoloServiceInstance.aggiungiCategoria(nuovoArticolo1, nuovaCategoria);
+		Articolo articoloReloaded = articoloServiceInstance.caricaArticoloEager(nuovoArticolo1.getId());
+		if (articoloReloaded.getCategorie().isEmpty()) {
+			throw new RuntimeException(
+					"testSommaPrezziArticoliDiUnaCategoria FALLITO: articolo non associato a categoria");
+		}
+
+		Articolo nuovoArticolo2 = new Articolo("iPod", "0002", 180D, LocalDate.now());
+		nuovoArticolo2.setOrdine(nuovoOrdine);
+		articoloServiceInstance.inserisciNuovo(nuovoArticolo2);
+		if (nuovoArticolo2.getId() == null) {
+			throw new RuntimeException("testSommaPrezziArticoliDiUnaCategoria FALLITO: Ordine non inserito.");
+		}
+		articoloServiceInstance.aggiungiCategoria(nuovoArticolo2, nuovaCategoria);
+		Articolo articoloReloaded2 = articoloServiceInstance.caricaArticoloEager(nuovoArticolo2.getId());
+		if (articoloReloaded2.getCategorie().isEmpty()) {
+			throw new RuntimeException(
+					"testSommaPrezziArticoliDiUnaCategoria FALLITO: articolo non associato a categoria");
+		}
+
+		Double sommaPrezzi = articoloServiceInstance.sommaPrezzoArticoliDiUnaCategoria(idNuovaCategoria);
+
+		System.out.println("La somma dei prezzi degli articoli di questa categoria è: " + sommaPrezzi);
+		System.out.println("------------- testSommaPrezziArticoliDiUnaCategoria FINE -------------");
+	}
+	
+	private static void testSommaPrezzoArticoliPerUnDestinatario(OrdineService ordineServiceInstance,
+			ArticoloService articoloServiceInstance, CategoriaService categoriaServiceInstance) throws Exception {
+		System.out.println("------------- testSommaPrezzoArticoliPerUnDestinatario INIZIO -------------");
+
+		Ordine nuovoOrdine = new Ordine("Maurizio", "Via Mosca 52", LocalDate.of(2023, 3, 31),
+				LocalDate.of(2023, 8, 30));
+		ordineServiceInstance.inserisciNuovo(nuovoOrdine);
+		Long idNuovoOrdine1 = nuovoOrdine.getId();
+		if (idNuovoOrdine1 == null) {
+			throw new RuntimeException("testSommaPrezzoArticoliPerUnDestinatario FALLITO: Ordine non inserito.");
+		}
+		
+
+		Categoria nuovaCategoria = new Categoria("info", "201");
+		categoriaServiceInstance.inserisciNuovo(nuovaCategoria);
+		Long idNuovaCategoria1 = nuovaCategoria.getId();
+		if (idNuovaCategoria1 == null) {
+			throw new RuntimeException("testSommaPrezzoArticoliPerUnDestinatario FALLITO: categoria non inserita.");
+		}
+
+
+		Articolo nuovoArticolo = new Articolo("Telefono", "0088", 500d, LocalDate.now());
+		nuovoArticolo.setOrdine(nuovoOrdine);
+		articoloServiceInstance.inserisciNuovo(nuovoArticolo);
+		if (nuovoArticolo.getId() == null) {
+			throw new RuntimeException("testSommaPrezzoArticoliPerUnDestinatario FALLITO: Ordine non inserito.");
+		}
+		articoloServiceInstance.aggiungiCategoria(nuovoArticolo, nuovaCategoria);
+		Articolo articoloReloaded1 = articoloServiceInstance.caricaArticoloEager(nuovoArticolo.getId());
+		if (articoloReloaded1.getCategorie().isEmpty()) {
+			throw new RuntimeException(
+					"testSommaPrezzoArticoliPerUnDestinatario FALLITO: articolo non associato a categoria");
+		}
+
+		String nomeDestinatario = "Maurizio";
+		Double sommaPrezziArticoliPerUnDestinatario = articoloServiceInstance
+				.sommaPrezzoArticoliDiUnDestinatario(nomeDestinatario);
+		System.out.println(
+				"La somma dei prezzi degli articoli di questo destinatario è: " + sommaPrezziArticoliPerUnDestinatario);
+
+		System.out.println("------------- testSommaPrezzoArticoliPerUnDestinatario FINE -------------");
+	}
+
+
 }

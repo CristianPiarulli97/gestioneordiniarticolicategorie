@@ -131,4 +131,23 @@ public class OrdineServiceImpl implements OrdineService{
 			EntityManagerUtil.closeEntityManager(entityManager);
 		}	}
 
+	
+	@Override
+	public List<Ordine> listaOrdiniPerCategoria(Long idCategoria) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			// injection
+			ordineDAO.setEntityManager(entityManager);
+
+			return ordineDAO.findAllByCategoria(idCategoria);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
+
 }

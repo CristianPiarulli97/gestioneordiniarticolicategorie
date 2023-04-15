@@ -191,6 +191,36 @@ public class ArticoloServiceImpl implements ArticoloService{
 		}
 	}
 
-	
+	@Override
+	public Double sommaPrezzoArticoliDiUnaCategoria(Long idCategoria) {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			articoloDAO.setEntityManager(entityManager);
+
+			return articoloDAO.sumPrezzoArticoliDiUnaCategoria(idCategoria);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
+
+	public Double sommaPrezzoArticoliDiUnDestinatario(String nomeDestinatario) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+			articoloDAO.setEntityManager(entityManager);
+
+			return articoloDAO.sumPrezzoArticoliDiUnDestinatario(nomeDestinatario);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
 	
 }
