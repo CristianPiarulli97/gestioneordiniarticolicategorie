@@ -1,5 +1,7 @@
 package it.prova.gestioneordiniarticolicategorie.service;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import it.prova.gestioneordiniarticolicategorie.dao.ArticoloDAO;
@@ -23,6 +25,72 @@ public class OrdineServiceImpl implements OrdineService{
 		this.articoloDAO = articoloDAO;		
 	}
 
+	
+	public Ordine caricaSingoloElemento(Long id) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			// injection
+			ordineDAO.setEntityManager(entityManager);
+
+			return ordineDAO.get(id);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
+	
+	public void aggiorna(Ordine ordineInstance) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			entityManager.getTransaction().begin();
+
+			// injection
+			ordineDAO.setEntityManager(entityManager);
+
+			ordineDAO.update(ordineInstance);
+
+			entityManager.getTransaction().commit();
+		} catch (Exception e) {
+			entityManager.getTransaction().rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+
+	}
+
+	
+	@Override
+	public void rimuovi(Long idOrdine) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			entityManager.getTransaction().begin();
+
+			// injection
+			ordineDAO.setEntityManager(entityManager);
+			articoloDAO.setEntityManager(entityManager);
+			
+			
+
+			ordineDAO.delete(ordineDAO.get(idOrdine));
+
+			entityManager.getTransaction().commit();
+		} catch (Exception e) {
+			entityManager.getTransaction().rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
+	
 	@Override
 	public void inserisciNuovo(Ordine ordineInstance) throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
@@ -45,5 +113,22 @@ public class OrdineServiceImpl implements OrdineService{
 		}
 		
 	}
+
+	@Override
+	public List<Ordine> listAll() throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			// injection
+			ordineDAO.setEntityManager(entityManager);
+
+			return ordineDAO.list();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}	}
 
 }
