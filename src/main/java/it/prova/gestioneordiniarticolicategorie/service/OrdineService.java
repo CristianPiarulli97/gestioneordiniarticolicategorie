@@ -4,7 +4,6 @@ import java.util.List;
 
 import it.prova.gestioneordiniarticolicategorie.dao.ArticoloDAO;
 import it.prova.gestioneordiniarticolicategorie.dao.OrdineDAO;
-import it.prova.gestioneordiniarticolicategorie.model.Categoria;
 import it.prova.gestioneordiniarticolicategorie.model.Ordine;
 
 public interface OrdineService {
@@ -26,5 +25,9 @@ public interface OrdineService {
 	
 
 	public List<Ordine> listaOrdiniPerCategoria(Long idCategoria) throws Exception;
+
+	public List<String> indirizziConArticoliContenentiNumeroSeriale(String stringaNumeroSeriale);
+
+	public Ordine ordinePiuRecentePerCategoria(Long idNuovaCategoria1);
 
 }

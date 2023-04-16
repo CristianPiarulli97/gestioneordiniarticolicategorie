@@ -21,7 +21,7 @@ public class OrdineServiceImpl implements OrdineService{
 	}
 
 	@Override
-	public void setArticoloDAO(ArticoloDAO articoloDAOInstance) {
+	public void setArticoloDAO(ArticoloDAO articoloDAO) {
 		this.articoloDAO = articoloDAO;		
 	}
 
@@ -141,6 +141,42 @@ public class OrdineServiceImpl implements OrdineService{
 			ordineDAO.setEntityManager(entityManager);
 
 			return ordineDAO.findAllByCategoria(idCategoria);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
+
+	@Override
+	public List<String> indirizziConArticoliContenentiNumeroSeriale(String stringaNumeroSeriale) {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			// injection
+			ordineDAO.setEntityManager(entityManager);
+
+			return ordineDAO.indirizziDegliOrdiniContenentiNumeroSeriale(stringaNumeroSeriale);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
+
+	@Override
+	public Ordine ordinePiuRecentePerCategoria(Long idCategoria) {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			// injection
+			ordineDAO.setEntityManager(entityManager);
+
+			return ordineDAO.getRecentOrdineByCategoria(idCategoria);
 
 		} catch (Exception e) {
 			e.printStackTrace();
